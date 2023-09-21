@@ -48,6 +48,9 @@ app.use(express.static(path.join(__dirname, "dist")));
 const userRouter = require("./routes/api/users.cjs");
 app.use("/api/users", userRouter);
 
+// ORDERS
+app.use("/api/orders", require("./routes/api/orders.cjs"));
+
 // CATCH ALL
 // The following "catch all" route (note the *) is necessary
 // to return the index.html on all non-AJAX requests
@@ -71,7 +74,103 @@ app.listen(PORT, function () {
 
 /* 
 SETTING UP A NEW APP
+Use notes App for process here
+Use CodeAlong for the rest of the front-end code.
 
+GIT COMMIT NOTES 9/21 (BIG STROKES)
+touch models/categories.cjs (copy code from slack)
+touch models/itemSchema.cjs (copy code from slack)
+touch models/item.cjs (copy code from slack)
+touch models/order.cjs (copy code from slack)
+* mkdir routes/api (copy code from slack)
+touch orders.cjs (requires express.Router & orderCtrl from controllers/api/orders.cjs)
+* server.cjs (ADD A ROUTE COPY FROM SLACK)
+* touch controllers/api/orders.cjs (copy code from slack)
+touch config/seed.cjs (copy code from slack)
+
+CATEGORY Schema: 
+name type string required true
+sortOrder: Number
+timestamps: true
+
+exports model("category", categorySchema)
+
+ITEM Schema (separate from model per ERD):
+name: type string required true
+emoji: String (not required)
+category: type Schema.Types.ObjectID (mongoose method)
+ref: "Category" (see above model)
+price: type Number required true default 0
+module.exports = itemSchema
+THIS WILL ALSO BE USED IN THE ORDERS MODEL
+
+ITEM Schema
+require ./category.cjs
+require ./itemSchema.cjs
+(need the extension)
+(Need requires in order to run the file)
+module.exports = model('Item', itemSchema)
+ANY time you use a REF, need to load the file/require it
+
+ORDER Model
+import { Schema, model }
+import itemSchema
+orderSchema
+user: type: Schema.Types.ObjectID, ref: "User", required: true
+isPaid: type: Boolean, default: false
+lineItems: [] // Object and quantity of objects (subSchema above: LineItem)
+timestamps: true
+toJson {virtuals: true}
+
+LINEITEM Subdocument Schema
+(this is an object, so lineItems will be an array of objects)
+lineItems is an object, that is contained in the order array under lineItems
+qty: type: number, default: 1
+item: itemSchema
+timestamps: true
+toJson {virtuals: true}
+
+NEW STUFF (VIRTUALS, still in LINEITEM)
+// https://mongoosejs.com/docs/tutorials/virtuals.html
+// NOT stored in MongoDB, but computed from other Schema fields
+// Eliminates having to do updates every time we do something
+
+lineItemSchema.virtual("extPrice").get(function () {return.this.qty * this.item.price})
+We give this a function for mongoose to calculate the exit price from the item.cjs 
+which embeds itemSchema and orderSchema
+Access quantity and price from 
+
+orderSchema.virtual
+
+totalQty
+
+orderID
+
+All orderSchema Virtuals
+
+module.exports = model("Order", )
+
+ORDERS.CJS (routes/api/orders.cjs)
+(copy from slack)
+
+SERVER.CJS
+(add route, copy from slack)
+
+CONTROLLERS/API/ORDERS.CJS
+
+ERD (Entity Relational Diagram)
+Shows how models are connecting to one another
+https://drive.google.com/file/d/1UAqYL055QM7bL2J1f9yrQX_XZ1wMOuoy/view?usp=sharing
+
+FRONT END FINISH NOTES
+
+
+
+CODE ALONG 6:
+https://pscohorts.slack.com/archives/C056A692JAX/p1695323706296799
+
+REPO
+https://github.com/andrewdoak/mern-boilerplate
 
 SLIDES:
 https://ps-rtt-sei.herokuapp.com/15-week/mod-3/week-13/day-3/slides/
