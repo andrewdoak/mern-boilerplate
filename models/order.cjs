@@ -42,7 +42,60 @@ orderSchema.virtual("totalQty").get(function () {
 });
 
 orderSchema.virtual("orderId").get(function () {
-  return this._id.slice(-6).toUpperCase();
+  return this.id.slice(-6).toUpperCase();
 });
+
+//Order.find()
+//Order.getCart()
+// A cart is a order that has not been paid
+orderSchema.statics.getCart = function (userId) {
+  // 'this' is the Order model
+  return this.findOneAndUpdate(
+    // query
+    { user: userId, isPaid: false },
+    // update
+    { user: userId },
+    // upsert option will create the doc if
+    // it doesn't exist
+    { upsert: true, new: true }
+  );
+};
+/*
+  const order = await Order.findById(id)
+  order.addItemToCart()
+*/
+orderSchema.methods.addItemToCart = async function (itemId) {
+  const cart = this;
+  // Check if item already in cart
+  const lineItem = cart.lineItems.find((lineItem) =>
+    lineItem.item._id.equals(itemId)
+  );
+  if (lineItem) {
+    lineItem.qty += 1;
+  } else {
+    const item = await model("Item").findById(itemId);
+    cart.lineItems.push({ item });
+  }
+  return cart.save();
+};
+
+// Instance method to set an item's qty in the cart (will add item if does not exist)
+orderSchema.methods.setItemQty = function (itemId, newQty) {
+  // this keyword is bound to the cart (order doc)
+  const cart = this;
+  // Find the line item in the cart for the menu item
+  const lineItem = cart.lineItems.find((lineItem) =>
+    lineItem.item._id.equals(itemId)
+  );
+  if (lineItem && newQty <= 0) {
+    // Calling deleteOne, deletes itself from the cart.lineItems array
+    lineItem.deleteOne();
+  } else if (lineItem) {
+    // Set the new qty - positive value is assured thanks to prev if
+    lineItem.qty = newQty;
+  }
+  // return the save() method's promise
+  return cart.save();
+};
 
 module.exports = model("Order", orderSchema);

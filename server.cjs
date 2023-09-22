@@ -8,6 +8,8 @@ const path = require("path");
 // Other Dependencies (we just downloaded)
 const favicon = require("serve-favicon");
 const logger = require("morgan");
+// Protected routes
+const ensureLoggedIn = require("./config/ensureLoggedIn.cjs");
 
 // DB Connection (through file)
 // Formerly done in the server.js
@@ -49,7 +51,11 @@ const userRouter = require("./routes/api/users.cjs");
 app.use("/api/users", userRouter);
 
 // ORDERS
-app.use("/api/orders", require("./routes/api/orders.cjs"));
+// Required login status to hit routes (protected routes)
+app.use("/api/orders", ensureLoggedIn, require("./routes/api/orders.cjs"));
+
+// ITEMS
+app.use("/api/items", ensureLoggedIn, require("./routes/api/items.cjs"));
 
 // CATCH ALL
 // The following "catch all" route (note the *) is necessary
