@@ -3,7 +3,7 @@ import "./App.css";
 // REACT IMPORTS
 import { useState } from "react";
 // ROUTER (destructured)
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 // PAGES
 import NewOrderPage from "../NewOrderPage/NewOrderPage";
 import AuthPage from "../AuthPage/AuthPage";
@@ -41,6 +41,8 @@ export default function App() {
               path="/orders"
               element={<OrderHistoryPage user={user} setUser={setUser} />}
             />
+            {/* CATCH ALL */}
+            <Route path="*" element={<Navigate to="/orders/new" />} />
           </Routes>
         </>
       ) : (

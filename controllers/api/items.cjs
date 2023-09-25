@@ -1,4 +1,4 @@
-const Item = require("../../models/Item.cjs");
+const item = require("../../models/item.cjs");
 
 module.exports = {
   index,
@@ -7,7 +7,7 @@ module.exports = {
 
 async function index(req, res) {
   try {
-    const items = await Item.find({}).sort("name").populate("category").exec();
+    const items = await item.find({}).sort("name").populate("category").exec();
     // re-sort based upon the sortOrder of the categories
     items.sort((a, b) => a.category.sortOrder - b.category.sortOrder);
     res.status(200).json(items);
@@ -18,7 +18,7 @@ async function index(req, res) {
 
 async function show(req, res) {
   try {
-    const item = await Item.findById(req.params.id);
+    const item = await item.findById(req.params.id);
     res.status(200).json(item);
   } catch (e) {
     res.status(400).json({ msg: e.message });

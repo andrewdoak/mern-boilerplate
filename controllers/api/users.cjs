@@ -2,7 +2,7 @@
 
 // MULTIPLE CONTROLLERS, ONE FILE
 // THAT MEANS WE NEED OBJECTS
-const User = require("../../models/user.cjs");
+const user = require("../../models/user.cjs");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 // EXPORTS
@@ -18,7 +18,7 @@ module.exports = {
 async function create(req, res) {
   try {
     // CREATE user and add to DB
-    const user = await User.create(req.body);
+    const user = await user.create(req.body);
     // TOKEN will be a string
     const token = createJWT(user);
     // Yes, we can use res.json to send back just a string

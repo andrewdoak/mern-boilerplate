@@ -26,7 +26,7 @@ export default function OrderDetail({
             ORDER <span className="smaller">{order.orderId}</span>
           </span>
         ) : (
-          <span>NEW ORDER</span>
+          <span>NEW ORDER: </span>
         )}
         <span>{new Date(order.updatedAt).toLocaleDateString()}</span>
       </div>
@@ -55,7 +55,7 @@ export default function OrderDetail({
             </section>
           </>
         ) : (
-          <div className={styles.hungry}>Hungry?</div>
+          <div className={styles.hungry}>HUNGRY?</div>
         )}
       </div>
     </div>
