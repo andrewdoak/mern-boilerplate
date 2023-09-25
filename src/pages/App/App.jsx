@@ -50,6 +50,9 @@ export default function App() {
   );
 }
 
+// Render Deploy
+// https://merncafe.onrender.com/
+//
 // SLIDES:
 // https://ps-rtt-sei.herokuapp.com/15-week/mod-3/week-13/day-3/slides/
 // https://ps-rtt-sei.herokuapp.com/15-week/mod-3/week-14/day-1/slides/
